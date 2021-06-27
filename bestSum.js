@@ -7,7 +7,8 @@
 // for eg. targetSum = 7 arr = [5, 3, 4, 7] => [7]
 // targetSum = 7 arr = [2, 4] => null
 
-const bestSum = (targetSum, numbers) => {
+const bestSum = (targetSum, numbers, memo = {}) => {
+    if(targetSum in memo) return memo[targetSum];
     if(targetSum === 0) return []
     if(targetSum < 0) return null
 
@@ -15,7 +16,7 @@ const bestSum = (targetSum, numbers) => {
 
     for (let num of numbers){
         const remainder = targetSum - num;
-        const remainderCombination = bestSum(remainder, numbers);
+        const remainderCombination = bestSum(remainder, numbers, memo);
 
         if(remainderCombination !== null){
             const combination = [...remainderCombination, num];
@@ -25,6 +26,8 @@ const bestSum = (targetSum, numbers) => {
             }
         }
     }
+
+    memo[targetSum] = shortestCombination;
 
     return shortestCombination;
 
@@ -38,8 +41,12 @@ const bestSum = (targetSum, numbers) => {
 // time: O(n^m * m)
 // space: O(m^2)
 
+// Memoized
+// time: O(n * m * m)
+// space: O(m^2)
+
 
 console.log(bestSum(7, [5,3,4,7])) 
 console.log(bestSum(7, [2,4]))
 console.log(bestSum(49, [7,14]))
-console.log(bestSum(8, [1, 1, 1, 2, 4]))
+console.log(bestSum(8009, [100, 1, 1, 2, 4]))
