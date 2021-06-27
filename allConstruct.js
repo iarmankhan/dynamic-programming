@@ -7,7 +7,8 @@
 // target = 'abcdef' wordBank = ['abc', 'ab', 'cd', 'def', 'd'] => [['abc', 'def']]
 // target = 'abbbba' wordBank = ['abb', 'cd', 'aa', 'abc'] => []
 
-const allConstruct = (target, wordBank) => {
+const allConstruct = (target, wordBank, memo = {}) => {
+    if(target in memo) return memo[target]
     if(target === '') return [[]]
     
     const result = []
@@ -15,18 +16,24 @@ const allConstruct = (target, wordBank) => {
     for(let word of wordBank){
         if(target.indexOf(word) === 0){
             const suffix = target.slice(word.length)
-            const suffixWays = allConstruct(suffix, wordBank);
+            const suffixWays = allConstruct(suffix, wordBank, memo);
             const targetWays = suffixWays.map(suffixWay => [word, ...suffixWay]);
             
             result.push(...targetWays) 
         }
     }
-    
+    memo[target] = result;
     return result;
 };
 
+// m = target.length
+// n = wordBank.length
+
+// Bruteforce
+// time = O(n^m )
+// space = O(m)
 
 console.log(allConstruct('abcdef', ['abc', 'ab', 'cd', 'def', 'd'])) // [['abc', 'def']]
 console.log(allConstruct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])) // [['purp', 'le'], ['p', 'ur', 'p', 'l', 'e']]
 console.log(allConstruct('abbbba', ['abb', 'cd', 'aa', 'abc'])) // []
-console.log(allConstruct('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef', ['e', 'eeeeeeee', 'eeeee', 'eeeeeeeeeeeeeeeee', 'eee'])) // []
+console.log(allConstruct('eeeeeeeeeeeeeeeeeeeeeef', ['e', 'eeeeeeee', 'eeeee', 'eeeeeeeeeeeeeeeee', 'eee'])) // []
